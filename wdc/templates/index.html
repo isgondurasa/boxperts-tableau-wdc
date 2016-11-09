@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <title>{{title}}</title>
+        <meta http-equiv="Cache-Control" content="no-store" />
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" type="text/javascript"></script
+
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
+        <script src="https://connectors.tableau.com/libs/tableauwdc-2.0.latest.js" type="text/javascript"></script>
+        <script src="static/app.js" type="text/javascript"></script>
+
+    </head>
+
+    <body>
+        <div class="container container-table"
+             style="margin-top: 20px;">
+            <div class="row">
+              <div class="col-md-2">
+                <button type="button"
+                        id="submitButton"
+                        style="height:40px;"
+                        class="btn btn-success">
+                  Get Box Data
+                </button>
+
+              </div>
+              <div class="col-md-9">
+                  <ul class="nav nav-pills"
+                      id="template-list">
+                      {% for field in metafields.entries %}
+                      <li role="presentation"
+                          class="template-list-item {% if loop.first %}active{% endif %}"
+                          value="{{field.templateKey}}">
+                          <a href="#">{{field.displayName}}</a>
+                      </li>
+                      {% endfor %}
+                  </ul>
+              </div>
+              <div>
+                <button type="button"
+                        id="logoutButton"
+                        style="height:40px;"
+                        class="btn btn-warning">
+                  Log Out
+                </button>
+              </div>
+            </div>
+            <div class="row">
+               <div class="list-group col-md-12"
+                 id="folder-list"
+                 style="margin-top: 10px;">
+                {% for el in folders %}
+                   <a href="#"
+                      class="list-group-item {% if loop.first %}active{% endif %}"
+                      value="{{el.id}}">{{el.name}}</a>
+                {% endfor %}
+               </div>
+            </div>
+        </div>
+    </body>
+</html>
