@@ -30,7 +30,7 @@ def return_error(error):
         'data': ""
     })
 
-@app.route("/")
+@app.route("/wdc")
 def index():
     # TODO: make class-based index with support of dynamic project naming
     if not session:

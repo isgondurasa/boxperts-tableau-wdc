@@ -1,5 +1,4 @@
 version: "2"
-
 services:
   web:
     restart: always
@@ -16,19 +15,19 @@ services:
       - excel:excel
       - nltk:nltk
     command: gunicorn -w 2 -b :5000 wdc:app
+    external_links:
+      - redis:redis
   excel:
-    build: .
+    build:
+      context: .
     container_name: metaf_service_excel
     restart: always
     network_mode: bridge
     command: python services/metaf_excel.py
   nltk:
-    build: .
+    build:
+      context: .
     container_name: metaf_service_nltk
     network_mode: bridge
     restart: always
     command: python services/metaf_nltk.py
-  redis:
-    network_mode: bridge
-    restart: always
-    image: redis:latest

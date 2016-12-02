@@ -22,7 +22,7 @@ Jinja2==2.8
 lxml==3.6.4
 MarkupSafe==0.23
 nltk==3.2.1
-numpy==1.11.2
+# numpy==1.11.2
 paramiko==1.17.2
 pathlib2==2.1.0
 pexpect==4.2.1

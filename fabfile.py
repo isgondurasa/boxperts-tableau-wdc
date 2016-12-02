@@ -30,4 +30,4 @@ def deploy(branch="master", arch_name="app.tar.bz2"):
     with cd ('wdc'):
         run("docker-compose down")
         run("docker-compose build")
-        run("docker-compose up --focre-recreate -d")
+        run("docker-compose up --force-recreate -d")
