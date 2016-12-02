@@ -9,6 +9,7 @@ class BoxHelper:
 
     def __init__(self, client):
         self._client = client
+        self._templates = None
 
     @property
     def client(self):
@@ -27,11 +28,11 @@ class BoxHelper:
     def get_file_metafields(self, scope="enterprise", f=None, f_id=None):
         if not f and not f_id:
             raise Exception("no file_id or file object defined")
-        f_id = f.id or f_id
-        if f_id:
-            url = self._client.get_url("files/{}/metadata/".format(f_id))
-            response = self._client.make_request(method="GET", url=url)
-            return response.json()
+        if not f_id:
+            f_id = f.id
+        url = self._client.get_url("files/{}/metadata/".format(f_id))
+        response = self._client.make_request(method="GET", url=url)
+        return response.json()
 
     def get_file_metafield_or_none(self, template_name, scope="enterprise", f=None, f_id=None):
         metafields = self.get_file_metafields(scope, f, f_id)
@@ -68,41 +69,53 @@ class BoxHelper:
             if entry["templateKey"] == template_name:
                 return entry
 
-    def create_metadata(self, f_id, type, template):
-        pass
+    @property
+    def templates(self):
+        if not self._templates:
+            self._templates = self.get_scope_templates_or_none()
+        return self._templates
 
+    def get_scope_templates_as_dict(self):
+        as_dict = {}
+        for template in self.templates['entries']:
+            as_dict[template['templateKey']] = template
+        return as_dict
 
-    def create_metadata_file(self, file_id, template, template_meta, data, scope="enterprise"):
+    def create_metadata(self, template, template_meta, data, scope="enterprise"):
         """
         creates a metadata instance
         and attaches it to a file
         """
 
+        import ipdb; ipdb.set_trace()
         template_to_key = {}
         for template_el in template_meta['fields']:
             template_to_key[template_el['displayName']] = template_el['key']
 
-        values = []
-        for line in data:
-            v = {}
-            f_id = line["Box link ID"]
-            for k, val in line.items():
-                if k in template_to_key and val:
-                    v[template_to_key[k]] = val
 
-            values.append((f_id, v))
-
-        for f_id, els in values:
-            metadata = self._client.file(f_id).metadata(scope, template)
+        for row in data:
+            metadata = self._client.file(row['id']).metadata(scope, template)
             try:
                 metadata.delete()
-            except Exception as e: #TODO (sao): change to box exception
-                print(e)
+            except Exception as e:
+                print e
 
             try:
-                metadata.create(els)
-            except Exception as e: #TODO (sao): change to box exception
-                print(e)
+                for l in ["id", "name", "path"]:
+                    row.pop(l, None)
+                metadata.create(row)
+            except Exception as e:
+                raise
+
+        # values = []
+        # for line in data:
+        #     v = {}
+        #     f_id = line["Box link ID"]
+        #     for k, val in line.items():
+        #         if k in template_to_key and val:
+        #             v[template_to_key[k]] = val
+
+        #     values.append((f_id, v))
 
     def update_metadata(self, f_id, template, data, scope="enterprise"):
         """

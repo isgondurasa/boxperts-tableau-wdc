@@ -2,7 +2,8 @@
 
     var connector = tableau.makeConnector();
 
-    var folder, template;
+    var folder,
+        template;
 
     var dataTypes = {
         'string': tableau.dataTypeEnum.string,
@@ -62,23 +63,15 @@
         });
     }
 
-    function baseCallback(vResp, cResp) {
-
-        vResp = vResp.length && vResp[0];
-        cResp = cResp.length && cResp[0];
-
-        me.vectors = vResp && JSON.parse(vResp).data;
-        me.columns = cResp && JSON.parse(cResp).data;
-
-    };
-
     function failure(error) {
         alert(error);
     };
 
     $(document).ready(function() {
-        folder = $(".list-group-item.active").attr("value");
-        template = $(".template-list-item.active").attr("value");
+        folder = "none"; //$(".list-group-item.active").attr("value");
+        template = "none"; //$(".template-list-item.active").attr("value");
+
+        tableau.username = JSON.stringify({folder: folder, template: template});
 
         $(".list-group-item").click(function (e) {
             var self = this;
@@ -91,6 +84,11 @@
 
             self.classList.add("active");
             folder = $(self).attr('value');
+
+            $.ajax({
+                url: '/api/set_folder/'+ folder,
+                method: 'GET'
+            });
         });
 
         $(".template-list-item").click(function(e) {
@@ -104,20 +102,69 @@
 
             self.classList.add("active");
             template = $(self).attr("value");
+
+            $.ajax({
+                url: '/api/set_template/' + template,
+                method: 'GET'
+            });
         });
 
         $("#submitButton").click(function () {
-
-            tableau.username = "123";
-            tableau.password = "321";
-
             tableau.connectionName = "Box metadata test info";
             tableau.submit();
         });
 
         $("#logoutButton").click(function() {
+            $.ajax({
+                url: "/api/logout",
+                method: "GET"
+            }).done(function() {
+                window.location.replace("/");
+            });
+        });
+
+        $("#processButton").click(function() {
+            $.ajax({
+                url: '/api/process/' + template + "/" + folder,
+                method: "GET"
+            }).done(function(r) {
+                alert(r);
+            });
+        });
+
+        $("#downloadButton").click(function() {
+            $.ajax({
+                url: '/api/export/' + template + '/' + folder,
+                method: "GET",
+                complete: function(r) {
+                    var data = r && r.responseText && JSON.parse(r.responseText);
+                    window.location = data.data;
+                }
+            });
+        });
+
+        $("#uploadButton").click(function() {
+            var formData = new FormData($("#importForm")[0]);
+            var file = $("#importFile")[0].files[0];
+            formData.append('file', file);
+            $.ajax({
+                url: '/api/import/' + folder,
+                method: "POST",
+                data: formData,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                contentType: false,
+                success: function(response, textStatus, jqXHR) {
+                    console.log(response);
+                },
+                error: function(err) {console.log(err);}
+            });
+
+            console.log(formData);
         });
     });
+
 
     tableau.registerConnector(connector);
 

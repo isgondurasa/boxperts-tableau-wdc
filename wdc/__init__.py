@@ -1,8 +1,8 @@
 from flask import Flask
-from flask import request
 
-import json
 import redis
+import json
+
 from boxsdk import OAuth2, Client
 from boxsdk.exception import BoxOAuthException
 
@@ -23,10 +23,41 @@ app.config.from_object("settings")
 oauth = OAuth2(client_id=CLIENT_ID,
                client_secret=CLIENT_SECRET)
 
-def clear_tokens(session):
-    logging.info("Clear tokens")
-    for token in ('access_token', 'refresh_token'):
-        session[token] = ""
+
+class Data(object):
+
+    def __init__(self, data):
+        self.data = data
+
+    def prepare(self, data):
+        raise NotImplementedError
+
+class Col(Data):
+
+    def prepare(self):
+        result = [
+            {
+                "id": "file_name",
+                "alias": "File Name",
+                "type": "string",
+                "columnRole": "dimension"
+            }
+        ]
+
+        for col in self.data['fields']:
+            item = {
+                "id": col['key'],
+                "alias": col['displayName'],
+                'type': col['type']
+            }
+
+            if item['type'] != 'float':
+                item['columnRole'] = 'dimension'
+
+            result.append(item)
+
+        return result
+
 
 @contextmanager
 def get_client(session):
@@ -59,6 +90,8 @@ class RedisHelper:
         self._redis_server = redis.StrictRedis(connection_pool=pool)
         self._access_token = None
         self._refresh_token = None
+        self._folder = None
+        self._template = None
 
     @property
     def access_token(self):
@@ -76,17 +109,61 @@ class RedisHelper:
     def refresh_token(self, value):
         self._refresh_token = value
 
+    @property
+    def folder(self):
+        return self._folder
+
+    @folder.setter
+    def folder(self, value):
+        self._folder = value
+
+    @property
+    def template(self):
+        return self._template
+
+    @template.setter
+    def template(self, value):
+        self._template = value
+
+    def update(self, path, **params):
+        data = self.get(path)
+        for k, v in params.items():
+            setattr(self, k, v)
+        self.sync(path)
+
     def sync(self, path):
-        tokens = json.dumps(dict(access_token=self.access_token,
-                                 refresh_token=self.refresh_token))
+        data = dict(access_token=self.access_token,
+                    refresh_token=self.refresh_token,
+                    folder=self.folder,
+                    template=self.template)
+        tokens = json.dumps(data)
         self._redis_server.set(path, tokens)
 
     def get(self, path):
-        tokens = self._redis_server.get(path)
-        if tokens:
-            tokens = json.loads(tokens)
-            return tokens.get("access_token"), tokens.get("refresh_token")
+        data = self._redis_server.get(path)
+        if data:
+            data = json.loads(data)
+
+            for k, v in data.items():
+                setattr(self, k, v)
+
+            return data.get("access_token"), data.get("refresh_token")
         return None, None
 
-from views import index
 
+def insert_tokens_into_session(session):
+
+    r = RedisHelper()
+    access_token, refresh_token = r.get(PROJECT_PATH)
+    if not session and (access_token and refresh_token):
+        session['access_token'] = access_token
+        session['refresh_token'] = refresh_token
+
+
+def clear_tokens(session):
+    logging.info("Clear tokens")
+    for token in ('access_token', 'refresh_token'):
+        session[token] = ""
+
+
+from views import index

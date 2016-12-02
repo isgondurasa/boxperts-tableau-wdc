@@ -12,8 +12,6 @@ LIMIT = 20
 GOOD_FILE_EXTENSIONS = ["doc", "docx", "txt", "png", "pdf", "xls", "xlsx"]
 
 PROJECT_ROOT = abspath(dirname(__file__))
-FILES_DIR = os.path.join(PROJECT_ROOT, 'wdc', 'static', 'files')
-
 
 REDIS_HOST = os.environ.get("REDIS_HOST", "192.168.99.100")
 REDIS_PORT = 6379
