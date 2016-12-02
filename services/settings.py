@@ -19,8 +19,8 @@ REDIS_PORT = 6379
 INDEX = "test"
 
 SERVICES = {
-    "excel": dict(host=os.environ.get('EXCEL_HOST', "localhost"),
+    "excel": dict(host=os.environ.get('EXCEL_HOST', "0.0.0.0"),
                   port=os.environ.get('EXCEL_PORT', 5001)),
-    "nltk": dict(host=os.environ.get('NLTK_HOST', 'localhost'),
+    "nltk": dict(host=os.environ.get('NLTK_HOST', '0.0.0.0'),
                  port=os.environ.get('NLTK_PORT', 5002))
 }
