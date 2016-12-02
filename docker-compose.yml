@@ -11,7 +11,6 @@ services:
       - web.env
     network_mode: bridge
     links:
-      - redis:redis
       - excel:excel
       - nltk:nltk
     command: gunicorn -w 2 -b :5000 wdc:app

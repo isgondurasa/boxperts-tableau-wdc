@@ -3,20 +3,20 @@ backports.shutil-get-terminal-size==1.0.0
 boxsdk==1.5.3
 cffi==1.8.3
 click==6.6
-cryptography==1.5.3
+#  cryptography==1.5.3
 decorator==4.0.10
 docopt==0.6.2
 ecdsa==0.13
 enum34==1.1.6
-Fabric==1.12.0
+#  Fabric==1.12.0
 Flask==0.11.1
 Flask-PyMongo==0.4.1
 gunicorn==19.6.0
 idna==2.1
 ipaddress==1.0.17
-ipdb==0.10.1
-ipython==5.1.0
-ipython-genutils==0.1.0
+#  ipdb==0.10.1
+#  ipython==5.1.0
+#  ipython-genutils==0.1.0
 itsdangerous==0.24
 Jinja2==2.8
 lxml==3.6.4
