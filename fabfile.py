@@ -27,6 +27,8 @@ def deploy(branch="master", arch_name="app.tar.bz2"):
     local('scp {} {}/'.format("Dockerfile", remote_path))
     local('scp {} {}/'.format("web.env", remote_path))
     local('scp {} {}/'.format("requirements.txt", remote_path))
+    local('scp {} {}/'.format("prod_settings.py", remote_path))
+
     with cd ('wdc'):
         run("docker-compose down")
         run("docker-compose build")

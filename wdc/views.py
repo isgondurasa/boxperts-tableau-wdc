@@ -214,7 +214,7 @@ def export(template_name, folder_id):
 
     service = SERVICES['excel']
 
-    url = "http://" + service['host'] + ":%d" % service['port'] + '/services/excel/download'
+    url = "http://" + service['host'] + ":%s" % service['port'] + '/services/excel/download'
     data = requests.post(url, data=json.dumps(body)).content
 
     with open(os.path.join(FILES_DIR, 'test.xlsx'), 'w') as out:
@@ -249,14 +249,13 @@ def import_xlsx(folder_id):
         file_data = f.read()
 
         service = SERVICES['excel']
-        url = "http://" + service['host'] + ":%d" % service['port'] + '/services/excel/parse'
+        url = "http://" + service['host'] + ":%s" % service['port'] + '/services/excel/parse'
         data = requests.post(url, files={'file': file_data}).content
 
         if data:
             data = json.loads(data)
             data = data['data']
             data = __upload_metadata(data)
-        
 
     except Exception as e:
         return return_error(e)

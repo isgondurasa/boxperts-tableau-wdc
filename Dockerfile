@@ -13,5 +13,8 @@ RUN pip install -r requirements.txt
 ADD app.tar.bz2 /wdc
 WORKDIR /wdc
 
+ADD prod_settings.py /wdc/settings.py
+
+
 
 
