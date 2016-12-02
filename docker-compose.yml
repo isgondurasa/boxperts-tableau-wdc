@@ -22,7 +22,7 @@ services:
     container_name: metaf_service_excel
     restart: always
     network_mode: bridge
-    expose:
+    ports:
       - 5001
     command: python services/metaf_excel.py
   nltk:
@@ -31,6 +31,6 @@ services:
     container_name: metaf_service_nltk
     network_mode: bridge
     restart: always
-    expose:
+    ports:
       - 5002
     command: python services/metaf_nltk.py
