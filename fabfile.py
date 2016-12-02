@@ -13,6 +13,7 @@ from fabric.decorators import hosts
 HOST = "root@185.143.173.48"
 HOST_PATH = "~/wdc"
 
+@hosts(HOST)
 def deploy(branch="master", arch_name="app.tar.bz2"):
     """
     deploy a wdc application
@@ -26,7 +27,6 @@ def deploy(branch="master", arch_name="app.tar.bz2"):
     local('scp {} {}/'.format("Dockerfile", remote_path))
     local('scp {} {}/'.format("web.env", remote_path))
     local('scp {} {}/'.format("requirements.txt", remote_path))
-
     with cd ('wdc'):
         run("docker-compose down")
         run("docker-compose build")
