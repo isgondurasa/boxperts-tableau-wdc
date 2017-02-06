@@ -1,7 +1,7 @@
 # boxperts-tableau-wdc 
 Boxperts-tableau-wdc is a web driver application to get metafields data from box.com.
 
-## Instalation
+## Installation
 
 [1] You need to create a new application in box.com.
 just visit 
