@@ -1,0 +1,38 @@
+# IDE
+.idea
+/*.iml
+*.sublime-project
+*.sublime-workspace
+
+# settings
+settings.py
+prod_settings.py
+
+# python
+*.pyc
+*/__pycache__/*
+
+.DS_Store
+
+
+/Vagrantfile
+/.vagrant
+
+# alembic
+alembic.ini
+
+# tar.bz2
+*.tar.bz2
+
+# static
+static/vendors/*
+
+# Excel files
+*.xls
+*.xlsx
+
+*locale*.properties
+
+# emacs temporary files
+\.#*
+*.*~

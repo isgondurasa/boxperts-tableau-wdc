@@ -12,7 +12,6 @@ services:
     network_mode: bridge
     links:
       - excel:excel
-      - nltk:nltk
     command: gunicorn -w 2 -b :5000 wdc:app
     external_links:
       - redis:redis
@@ -25,12 +24,5 @@ services:
     ports:
       - 5001
     command: python services/metaf_excel.py
-  nltk:
-    build:
-      context: .
-    container_name: metaf_service_nltk
-    network_mode: bridge
-    restart: always
-    ports:
-      - 5002
-    command: python services/metaf_nltk.py
+  redis:
+    image: redis:latest

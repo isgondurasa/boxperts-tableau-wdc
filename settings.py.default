@@ -1,0 +1,19 @@
+### base settings for Box WDC Tableau app ###
+import os
+from os.path import abspath, dirname
+
+CLIENT_ID = ""
+CLIENT_SECRET = ""
+
+SECRET_KEY = ""
+LIMIT = 20
+GOOD_FILE_EXTENSIONS = ["doc", "docx", "txt", "png", "pdf", "xls", "xlsx"]
+
+PROJECT_ROOT = abspath(dirname(__file__))
+FILES_DIR = os.path.join(PROJECT_ROOT, 'wdc', 'static', 'files')
+
+
+REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
+REDIS_PORT = 6379
+
+INDEX = "test"
