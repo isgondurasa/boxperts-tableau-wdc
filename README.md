@@ -9,7 +9,9 @@ just visit
 and click on "Create a Box Application" link.
 
 [2] Save 'client_id' and 'client_secret' somewhere
+
 [3] enter the 'redirect_uri' (NOTE: redirect URI should fit OAUTH2 specification)
+
 [4] Click "Save Application" button at the bottom of the page
 
 [5] clone this repo. Right after that do (You'll have to install docker first):
